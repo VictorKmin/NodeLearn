@@ -1,21 +1,20 @@
-//TODO kurwa router
-//TODO 32:00
-
-let router = require('./router/bordelRouter');
+let bordelRouter = require('./router/bordelRouter');
+let kurwaRouter = require('./router/kurwaRouter');
 
 let express = require('express');
 let mongoose = require('mongoose');
 let bodyParse = require('body-parser');
 
 let app = express();
-// mongoose.promise = global.Promise;
+mongoose.promise = global.Promise;
 
 mongoose.connect('mongodb://localhost/restDB');
 
 // app.use(bodyParse.json);
 // app.use(bodyParse.urlencoded);
 
-app.use('/bordels', router);
+app.use('/bordels', bordelRouter);
+app.use('/kurwas', kurwaRouter);
 
 
 app.get('/', function (req, res) {
