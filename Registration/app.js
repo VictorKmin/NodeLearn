@@ -21,7 +21,7 @@ app.set('view engine', '.hbs');
 app.set('views', views);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extend : true}));
+app.use(bodyParser.urlencoded({extended : true}));
 
 app.use(session({
     secret : 'secretWord',
@@ -31,7 +31,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// psprt();
 
 app.get('/', function (req, res) {
     res.render('index');
@@ -45,10 +44,15 @@ app.get('/profile', function (req, res) {
 app.post('/profile',passport.authenticate('localSignUp',
     {feilureRedirect : '/',
       // successRedirect : '/profile',
-        session : false
+      //   session : false
     }),function (req, res) {
     console.log(req.body);
-    res.render('profile');
+    console.log(req.user);
+    console.log(req.user.password);
+    console.log(req.user.login);
+    res.render('profile', {
+         user : req.user
+    });
 });
 
 app.listen(3000, function (err) {

@@ -7,11 +7,6 @@ passport.serializeUser(function (user, done) {
     done(null, user);
 });
 
-passport.serializeUser(function (id, done) {
-    modelUser.findById(id, function (err, user) {
-        done(err, user);
-    });
-});
 passport.deserializeUser(function (id, done) {
     modelUser.findById(id, function (err, user) {
         done(err, user);
@@ -35,7 +30,7 @@ passport.use('localSignUp',new localStrategy({
                 if (err){
                     done(err)
                 } else {
-                    done(null, doc)
+                    done(null, doc);
                 }
             })
         }
