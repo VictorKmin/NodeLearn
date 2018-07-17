@@ -1,5 +1,6 @@
 //TODO нормальний роутер
 let userSchema = require('./models/User');
+require('./config/passportConfig');
 
 let express = require('express');
 let bodyParser = require('body-parser');
@@ -11,7 +12,7 @@ let session = require('express-session');
 
 let app = express();
 
-mongoose.connect('mongodb://localhost/loginBase')
+mongoose.connect('mongodb://localhost/loginBase');
 
 let views = path.join(__dirname, 'views');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,8 +29,9 @@ app.use(session({
     saveUninitialized: false
 }));
 
-app.use(passport.session());
 app.use(passport.initialize());
+app.use(passport.session());
+// psprt();
 
 app.get('/', function (req, res) {
     res.render('index');
@@ -40,10 +42,13 @@ app.get('/profile', function (req, res) {
     });
 });
 
-app.post('/login',passport.authenticate('localSignUp'),
-    {feilureRedirect : '/'},
-    function (req, res) {
-   res.end('login')
+app.post('/profile',passport.authenticate('localSignUp',
+    {feilureRedirect : '/',
+      // successRedirect : '/profile',
+        session : false
+    }),function (req, res) {
+    console.log(req.body);
+    res.render('profile');
 });
 
 app.listen(3000, function (err) {

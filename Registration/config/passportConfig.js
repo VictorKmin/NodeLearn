@@ -4,7 +4,7 @@ let modelUser = require('../models/User');
 
 
 passport.serializeUser(function (user, done) {
-    done(null, user.id);
+    done(null, user);
 });
 
 passport.serializeUser(function (id, done) {
@@ -12,12 +12,17 @@ passport.serializeUser(function (id, done) {
         done(err, user);
     });
 });
+passport.deserializeUser(function (id, done) {
+    modelUser.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
 
 passport.use('localSignUp',new localStrategy({
     usernameField : 'login',
-    passwordField : 'pass'
+    passwordField : 'password'
 }, function (login, password, done) {
-    modelUser.find({login : login}, function (err, doc) {
+    modelUser.findOne({login : login}, function (err, doc) {
         if (err) {
             done(err)
         } else if (doc) {
@@ -25,8 +30,8 @@ passport.use('localSignUp',new localStrategy({
         } else {
             let newUser = new modelUser({});
             newUser.login = login;
-            newUser.password = pass;
-            newUser.seve(function (err, doc) {
+            newUser.password = password;
+            newUser.save(function (err, doc) {
                 if (err){
                     done(err)
                 } else {
